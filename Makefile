@@ -67,6 +67,6 @@ undeploy-webhook:
 	kubectl delete -f webhook/rbac/
 docker-build-webhook:
 	CGO_ENABLED=0 GOOS=linux go build -o ./webhook/webhook ./webhook/
-	docker build --no-cache -t nikengp/admission-webhook:v0.4 ./webhook/
+	docker build --no-cache -t nikengp/admission-webhook:v0.1 ./webhook/
 	rm -rf ./webhook/webhook
-	docker push nikengp/admission-webhook:v0.4
+	docker push nikengp/admission-webhook:v0.1

@@ -14,7 +14,7 @@
 
 build:
 	CGO_ENABLED=0 GOOS=linux go build -o webhook .
-	docker build --no-cache -t nikengp/admission-webhook:v0.4 .
+	docker build --no-cache -t nikengp/admission-webhook:v0.1 .
 	rm -rf webhook
 deploy: build
 	kubectl apply -f rbac/
