@@ -16,7 +16,7 @@ limitations under the License.
 package apis
 
 import (
-	"github.com/jpeeler/podpreset-crd/pkg/apis/settings/v1alpha1"
+	"github.com/arturozv/podpreset-crd/pkg/apis/settings/v1alpha1"
 )
 
 func init() {

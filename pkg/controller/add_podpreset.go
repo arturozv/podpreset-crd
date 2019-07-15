@@ -16,7 +16,7 @@ limitations under the License.
 package controller
 
 import (
-	"github.com/jpeeler/podpreset-crd/pkg/controller/podpreset"
+	"github.com/arturozv/podpreset-crd/pkg/controller/podpreset"
 )
 
 func init() {

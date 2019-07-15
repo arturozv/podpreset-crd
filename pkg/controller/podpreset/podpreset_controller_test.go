@@ -19,7 +19,7 @@ import (
 	"testing"
 	"time"
 
-	settingsv1alpha1 "github.com/jpeeler/podpreset-crd/pkg/apis/settings/v1alpha1"
+	settingsv1alpha1 "github.com/arturozv/podpreset-crd/pkg/apis/settings/v1alpha1"
 	"github.com/onsi/gomega"
 	"golang.org/x/net/context"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"

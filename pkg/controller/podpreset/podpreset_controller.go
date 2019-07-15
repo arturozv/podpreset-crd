@@ -19,8 +19,8 @@ import (
 	"context"
 	"fmt"
 
+	settingsv1alpha1 "github.com/arturozv/podpreset-crd/pkg/apis/settings/v1alpha1"
 	"github.com/golang/glog"
-	settingsv1alpha1 "github.com/jpeeler/podpreset-crd/pkg/apis/settings/v1alpha1"
 	appsv1 "k8s.io/api/apps/v1"
 	"k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"

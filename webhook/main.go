@@ -27,7 +27,7 @@ import (
 	"strings"
 
 	"github.com/golang/glog"
-	settingsapi "github.com/jpeeler/podpreset-crd/pkg/apis/settings/v1alpha1"
+	settingsapi "github.com/arturozv/podpreset-crd/pkg/apis/settings/v1alpha1"
 	"github.com/mattbaird/jsonpatch"
 	"k8s.io/api/admission/v1beta1"
 	corev1 "k8s.io/api/core/v1"
@@ -437,6 +437,8 @@ func mutatePods(ar v1beta1.AdmissionReview) *v1beta1.AdmissionResponse {
 type admitFunc func(v1beta1.AdmissionReview) *v1beta1.AdmissionResponse
 
 func serve(w http.ResponseWriter, r *http.Request, admit admitFunc) {
+	glog.Infof("handling request: %#v", r)
+
 	var body []byte
 	if r.Body != nil {
 		if data, err := ioutil.ReadAll(r.Body); err == nil {
@@ -471,6 +473,9 @@ func serve(w http.ResponseWriter, r *http.Request, admit admitFunc) {
 	ar.Request.OldObject = runtime.RawExtension{}
 
 	resp, err := json.Marshal(response)
+
+	glog.Infof("response: %#v", response)
+
 	if err != nil {
 		glog.Error(err)
 	}
@@ -494,5 +499,12 @@ func main() {
 		TLSConfig: configTLS(config),
 	}
 	glog.Infof("About to start serving webhooks: %#v", server)
+
+	// start webhook server in new rountine
+	// go func() {
+	// 	if err := server.ListenAndServeTLS("", ""); err != nil {
+	// 		glog.Errorf("Filed to listen and serve webhook server: %v", err)
+	// 	}
+	// }()
 	server.ListenAndServeTLS("", "")
 }

@@ -1,0 +1,13 @@
+namespace: podpreset-crd-system
+
+resources:
+- deployment.yaml
+
+patchesStrategicMerge:
+- webhook_cabundle_patch.yaml
+
+secretGenerator:
+- name: podpreset-service-tls
+  files:
+    - tls.crt=pki/podpreset-service.pem
+    - tls.key=pki/podpreset-service-key.pem

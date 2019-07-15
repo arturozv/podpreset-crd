@@ -19,8 +19,8 @@ import (
 	"flag"
 	"log"
 
-	"github.com/jpeeler/podpreset-crd/pkg/apis"
-	"github.com/jpeeler/podpreset-crd/pkg/controller"
+	"github.com/arturozv/podpreset-crd/pkg/apis"
+	"github.com/arturozv/podpreset-crd/pkg/controller"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
 	"sigs.k8s.io/controller-runtime/pkg/manager"

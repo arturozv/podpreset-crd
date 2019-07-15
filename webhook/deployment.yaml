@@ -23,23 +23,23 @@ spec:
         app: podpreset
     spec:
       containers:
-      - name: podpreset-webhook
-        imagePullPolicy: IfNotPresent
-        image: docker.io/service-catalog/admission-webhook:latest
-        args:
-        - -tls-cert-file=/keys/tls.crt
-        - -tls-private-key-file=/keys/tls.key
-        - -alsologtostderr
-        - -v=6
-        ports:
-        - containerPort: 443
-        volumeMounts:
-        - name: tls-keys
-          mountPath: /keys
+        - name: podpreset-webhook
+          imagePullPolicy: IfNotPresent
+          image: nikengp/admission-webhook:v0.4
+          args:
+            - -tls-cert-file=/keys/tls.crt
+            - -tls-private-key-file=/keys/tls.key
+            - -alsologtostderr
+            - -v=6
+          ports:
+            - containerPort: 443
+          volumeMounts:
+            - name: tls-keys
+              mountPath: /keys
       volumes:
-      - name: tls-keys
-        secret:
-          secretName: podpreset-service-tls
+        - name: tls-keys
+          secret:
+            secretName: podpreset-service-tls
 ---
 kind: Service
 apiVersion: v1
@@ -50,9 +50,9 @@ spec:
   selector:
     app: podpreset
   ports:
-  - protocol: TCP
-    port: 443
-    targetPort: 443
+    - protocol: TCP
+      port: 443
+      targetPort: 443
 ---
 apiVersion: admissionregistration.k8s.io/v1beta1
 kind: MutatingWebhookConfiguration
@@ -70,10 +70,11 @@ webhooks:
           - UPDATE
         resources:
           - pods
+    # use fail for debugging, after the webhook pod is up (otherwise it wont start)
+    #failurePolicy: Fail
     failurePolicy: Ignore
     clientConfig:
-      # base64 -w 0 ca.pem
-      caBundle: ## UPDATE ME ##
+      caBundle: ## UPDATED BY KUSTOMIZE ##
       service:
         name: podpreset-service
         namespace: podpreset-crd-system

@@ -1,6 +1,6 @@
 
 # Image URL to use all building/pushing image targets
-IMG ?= docker.io/service-catalog/podpreset-controller:latest
+IMG ?= nikengp/podpreset-controller:v0.2
 
 all: test manager
 
@@ -10,7 +10,7 @@ test: generate fmt vet manifests
 
 # Build manager binary
 manager: generate fmt vet
-	go build -o bin/manager github.com/jpeeler/podpreset-crd/cmd/manager
+	go build -o bin/manager github.com/arturozv/podpreset-crd/cmd/manager
 
 # Run against the configured Kubernetes cluster in ~/.kube/config
 run: generate fmt vet
@@ -46,7 +46,7 @@ generate:
 	go generate ./pkg/... ./cmd/...
 
 # Build the docker image
-docker-build: test
+docker-build: generate fmt vet manifests
 	docker build . -t ${IMG}
 	@echo "updating kustomize image patch file for manager resource"
 	sed -i '' -e 's@image: .*@image: '"${IMG}"'@' ./config/default/manager_image_patch.yaml
@@ -58,14 +58,15 @@ docker-push:
 #
 # Mutating webhook targets from here below
 #
-deploy-webhook:
+deploy-webhook: docker-build-webhook
 	kubectl apply -f webhook/rbac/
-	kustomize build webhook/kustomize-config | kubectl apply -f -
+	kustomize build webhook | kubectl apply -f -
 
 undeploy-webhook:
-	kustomize build webhook/kustomize-config | kubectl delete -f -
+	kustomize build webhook | kubectl delete -f -
 	kubectl delete -f webhook/rbac/
 docker-build-webhook:
 	CGO_ENABLED=0 GOOS=linux go build -o ./webhook/webhook ./webhook/
-	docker build --no-cache -t docker.io/service-catalog/admission-webhook ./webhook/
+	docker build --no-cache -t nikengp/admission-webhook:v0.4 ./webhook/
 	rm -rf ./webhook/webhook
+	docker push nikengp/admission-webhook:v0.4
